@@ -5,12 +5,12 @@ import Heuristics.Heuristic;
 
 import java.util.*;
 
-public class AStarSearch {
-    public List<State> search(State start, State target, Heuristic h, int[][] stateMap){
+public class AStarSearch implements SearchAlgorithm{
+    public List<State> search(State start, State target, int[][] stateMap, Heuristic h){
         PriorityQueue<State> openSet = new PriorityQueue<>();
 
         start.setG(0.0);
-        start.setF(start.getG() + start.calculateHeuristic(target, h));
+        start.setF(start.getG() + h.calculate(start, target));
 
         start.setParent(null);
 
@@ -19,36 +19,31 @@ public class AStarSearch {
 
         while (!openSet.isEmpty()){
             State current = openSet.poll();
-            if (current == target){
+            if (current.equals(target)){
                 return reconstructPath(current);
             }
 
             // apply every possible operator to the current state
             current.setNeighbours(stateMap);
 
-            for (State neighbor : current.getNeighbours()){
-                // totalWeight is the distance from start to the neighbor through current
-                double totalWeight = current.getG() + calculateWeight(current, neighbor);
+            for (State neighbor : current.getNeighbours()) {
+                if (neighbor.getState() != -1) {
+                    // totalWeight is the distance from start to the neighbor through current
+                    double totalWeight = current.getG() + current.calculateCost(neighbor);
 
-                if (totalWeight < neighbor.getG()){
-                    neighbor.setParent(current);
-                    neighbor.setG(totalWeight);
-                    neighbor.setF(totalWeight + neighbor.calculateHeuristic(target, h));
+                    if (totalWeight < neighbor.getG()) {
+                        neighbor.setParent(current);
+                        neighbor.setG(totalWeight);
+                        neighbor.setF(totalWeight + h.calculate(neighbor, target));
 
-                    if (!openSet.contains(neighbor)){
-                        openSet.add(neighbor);
+                        if (!openSet.contains(neighbor)) {
+                            openSet.add(neighbor);
+                        }
                     }
                 }
             }
-            // TODO: sort openSet by the "f" value of each state
         }
         return null;
-    }
-
-    // TODO: Calculate edge weight from current to neighbor
-    private double calculateWeight(State ini, State fi){
-
-        return -1;
     }
 
     private List<State> reconstructPath(State target){

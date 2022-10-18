@@ -6,7 +6,7 @@ import Heuristics.Heuristic;
 import java.util.*;
 
 public class BestFirstSearch {
-    public static List<State> search(State start, State target, Heuristic h, int[][] stateMap){
+    public List<State> search(State start, State target, Heuristic h, int[][] stateMap){
         PriorityQueue<State> openSet = new PriorityQueue<>(); // sorted by heuristic value
         List<State> closedSet = new ArrayList<>();
 
@@ -28,7 +28,7 @@ public class BestFirstSearch {
             else{
                 for (State neighboringState : current.getNeighbours()){
                     if (!closedSet.contains(neighboringState) && !openSet.contains(neighboringState)){
-                        double nHeuristic = neighboringState.calculateHeuristic(target, h); // gotta use it but don't know where
+                        double nHeuristic = h.calculate(neighboringState, target);
                         openSet.add(neighboringState);
                         //openSet.stream().sorted(); //TODO: Sort by heuristic value
                         // pends = afegir_orden(pends, [X, cami + op, h(X)])

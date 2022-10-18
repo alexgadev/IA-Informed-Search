@@ -3,5 +3,6 @@ package Heuristics;
 import DataStructures.State;
 
 public interface Heuristic {
-    double calculate(State target);
+    double calculate(State current, State target);
+
 }

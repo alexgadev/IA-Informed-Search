@@ -1,10 +1,9 @@
 package DataStructures;
 
-import Heuristics.Heuristic;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.util.*;
-
-public class State {
+public class State implements Comparable<State>{
     // State's coordinates
     private final int row, col;
 
@@ -68,23 +67,37 @@ public class State {
     }
 
     public void setNeighbours(int[][] stateMap){
-        // TODO: add "ifs"
-        neighbours.add(new State(row - 1, col, stateMap[row - 1][col]));
-        neighbours.add(new State(row, col - 1, stateMap[row][col - 1]));
-        neighbours.add(new State(row, col + 1, stateMap[row][col + 1]));
-        neighbours.add(new State(row + 1, col, stateMap[row + 1][col]));
+        if (!(row - 1 < 0))
+            neighbours.add(new State(row - 1, col, stateMap[row - 1][col]));
+        if (!(col - 1 < 0))
+            neighbours.add(new State(row, col - 1, stateMap[row][col - 1]));
+        if (!(row + 1 > stateMap.length - 1))
+            neighbours.add(new State(row + 1, col, stateMap[row + 1][col]));
+        if (!(col + 1 > stateMap[0].length - 1)) {
+            neighbours.add(new State(row, col + 1, stateMap[row][col + 1]));
+        }
     }
 
     public List<State> getNeighbours(){
         return this.neighbours;
     }
 
-    public double calculateHeuristic(State target, Heuristic h){
-        return h.calculate(target);
+    public double calculateCost(State target){
+        int dif = target.getState() - this.getState();
+        return dif >= 0 ? 1.0 + dif : 0.5;
     }
 
-    //TODO: add toString method
+    public boolean equals(State s){
+        return (this.row == s.getRow()) && (this.col == s.getCol());
+    }
+
+    @Override
+    public int compareTo(State s) {
+        return Double.compare(this.getF(), s.getF());
+    }
+
+    @Override
     public String toString(){
-        return null;
+        return "Coordinates = [" + getRow() + "," + getCol() + "]\tState = " + getState();
     }
 }

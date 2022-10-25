@@ -17,6 +17,8 @@ public class State implements Comparable<State>{
     private double g;
     private double f;
 
+    private double h;
+
 
     public State(int row, int col, int state){
         this.row = row;
@@ -66,6 +68,10 @@ public class State implements Comparable<State>{
         return g;
     }
 
+    public void setH(double h) {this.h = h;}
+
+    public double getH(){return h;}
+
     public void setNeighbours(int[][] stateMap){
         if (!(row - 1 < 0))
             neighbours.add(new State(row - 1, col, stateMap[row - 1][col]));
@@ -87,13 +93,15 @@ public class State implements Comparable<State>{
         return dif >= 0 ? 1.0 + dif : 0.5;
     }
 
-    public boolean equals(State s){
-        return (this.row == s.getRow()) && (this.col == s.getCol());
-    }
-
     @Override
     public int compareTo(State s) {
         return Double.compare(this.getF(), s.getF());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        State o = (State) obj;
+        return (this.row == o.getRow()) && (this.col == o.getCol());
     }
 
     @Override

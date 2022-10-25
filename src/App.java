@@ -1,6 +1,7 @@
 import DataStructures.State;
 import Heuristics.MinMin;
 import SearchAlgorithms.AStarSearch;
+import SearchAlgorithms.BestFirstSearch;
 import SearchAlgorithms.SearchAlgorithm;
 
 import java.util.List;
@@ -18,10 +19,10 @@ public class App {
                         {3, 5, 6, 5, 2, 3, -1, 5, 3, -1},
                         {5, 6, 7, 6, 4, 4, -1, 6, 4, 5}};
 
-        SearchAlgorithm search = new AStarSearch();
+        SearchAlgorithm search = new BestFirstSearch();
 
         State ini = new State(0, 0, map[0][0]);
-        State fi = new State(4, 5, map[4][5]);
+        State fi = new State(4, 9, map[4][9]);
 
         List<State> result = search.search(ini, fi, map, new MinMin());
 

@@ -8,6 +8,7 @@ import java.util.*;
 public class AStarSearch implements SearchAlgorithm{
     public List<State> search(State start, State target, int[][] stateMap, Heuristic h){
         PriorityQueue<State> openSet = new PriorityQueue<>();
+        List<State> closedSet = new ArrayList<>();
 
         start.setG(0.0);
         start.setF(start.getG() + h.calculate(start, target));
@@ -16,10 +17,12 @@ public class AStarSearch implements SearchAlgorithm{
 
         // Set of discovered nodes that may need to be (re-)expanded
         openSet.add(start);
-
+        int iter = 0;
         while (!openSet.isEmpty()){
             State current = openSet.poll();
+            iter++;
             if (current.equals(target)){
+                System.out.println("Iteraciones = " + iter);
                 return reconstructPath(current);
             }
 
@@ -36,12 +39,13 @@ public class AStarSearch implements SearchAlgorithm{
                         neighbor.setG(totalWeight);
                         neighbor.setF(totalWeight + h.calculate(neighbor, target));
 
-                        if (!openSet.contains(neighbor)) {
+                        if (!openSet.contains(neighbor) && !closedSet.contains(neighbor)) {
                             openSet.add(neighbor);
                         }
                     }
                 }
             }
+             closedSet.add(current);
         }
         return null;
     }

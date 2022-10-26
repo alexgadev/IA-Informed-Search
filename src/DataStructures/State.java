@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class State implements Comparable<State>{
-    // State's coordinates
     private final int row, col;
 
     // Parent in the path
@@ -29,6 +28,7 @@ public class State implements Comparable<State>{
         this.g = Double.MAX_VALUE;
         this.f = Double.MAX_VALUE;
 
+        // neighbors won't be discovered until state has been dealt with
         this.neighbours = new ArrayList<>();
     }
 
@@ -44,6 +44,8 @@ public class State implements Comparable<State>{
         return parent;
     }
 
+    // parent is only set once we know a path from state "X" to "this"
+    // is the optimal one
     public void setParent(State parent) {
         this.parent = parent;
     }
@@ -72,6 +74,9 @@ public class State implements Comparable<State>{
 
     public double getH(){return h;}
 
+    // discovering neighbors respecting state map's boundaries
+    // cliffs are handled at each algorithm but could have been implemented in
+    // this method
     public void setNeighbours(int[][] stateMap){
         if (!(row - 1 < 0))
             neighbours.add(new State(row - 1, col, stateMap[row - 1][col]));
@@ -88,16 +93,25 @@ public class State implements Comparable<State>{
         return this.neighbours;
     }
 
+    // calculation of formal specification of cost given in the assignment
     public double calculateCost(State target){
         int dif = target.getState() - this.getState();
         return dif >= 0 ? 1.0 + dif : 0.5;
     }
 
+    // check if state is in position x and y
+    public boolean isPosition(int x, int y){
+        return (x == this.row) && (y == this.col);
+    }
+
+    // overriding compareTo comparing f values for A*'s PriorityQueue
+    // could have implemented a Comparator as done in the Best First algorithm
     @Override
     public int compareTo(State s) {
         return Double.compare(this.getF(), s.getF());
     }
 
+    // checks if sates are equals by their position in the state map
     @Override
     public boolean equals(Object obj) {
         State o = (State) obj;

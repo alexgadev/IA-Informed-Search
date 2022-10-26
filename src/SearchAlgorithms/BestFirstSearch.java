@@ -10,13 +10,12 @@ public class BestFirstSearch implements SearchAlgorithm{
         PriorityQueue<State> openSet = new PriorityQueue<State>(new Comparator<State>() {
             @Override
             public int compare(State o1, State o2) {
-                double h1 = h.calculate(o1, target);
-                double h2 = h.calculate(o2, target);
-
                 return Double.compare(o1.getH(), o2.getH());
             }
         }); // sorted by heuristic value
+
         List<State> closedSet = new ArrayList<>();
+
         List<State> path = new ArrayList<>();
 
         openSet.add(start);
@@ -32,7 +31,7 @@ public class BestFirstSearch implements SearchAlgorithm{
 
             if (target.equals(current)){
                 solved = true;
-                System.out.println("Iteraciones = " + iter);
+                System.out.println("Iteracions = " + iter);
             }
             else{
                 iter++;

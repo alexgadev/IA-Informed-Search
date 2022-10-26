@@ -15,14 +15,14 @@ public class AStarSearch implements SearchAlgorithm{
 
         start.setParent(null);
 
-        // Set of discovered nodes that may need to be (re-)expanded
+        // set of discovered nodes
         openSet.add(start);
         int iter = 0;
         while (!openSet.isEmpty()){
-            State current = openSet.poll();
+            State current = openSet.poll(); // take first with best "f" value
             iter++;
             if (current.equals(target)){
-                System.out.println("Iteraciones = " + iter);
+                System.out.println("Iteracions = " + iter);
                 return reconstructPath(current);
             }
 
@@ -30,10 +30,12 @@ public class AStarSearch implements SearchAlgorithm{
             current.setNeighbours(stateMap);
 
             for (State neighbor : current.getNeighbours()) {
+                // avoid cliffs
                 if (neighbor.getState() != -1) {
                     // totalWeight is the distance from start to the neighbor through current
                     double totalWeight = current.getG() + current.calculateCost(neighbor);
 
+                    // this path to neighbor is better than any previous one
                     if (totalWeight < neighbor.getG()) {
                         neighbor.setParent(current);
                         neighbor.setG(totalWeight);
